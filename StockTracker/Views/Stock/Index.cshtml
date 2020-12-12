@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@using (Html.BeginForm("FindStock", "Stock"))
+{
+    <p>
+        Search  : @Html.TextBox("stockSymbol")<br />
+        <input type="submit" value="Search" />
+    </p>
+}
