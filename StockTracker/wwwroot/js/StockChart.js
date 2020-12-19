@@ -1,98 +1,116 @@
-﻿Highcharts.getJSON('https://demo-live-data.highcharts.com/aapl-ohlcv.json', function (data) {
+﻿
+/**
+* Request data from the server, add it to the graph and set a timeout to request again
+*/
 
-    // split the data set into ohlc and volume
-    var ohlc = [],
-        volume = [],
-        dataLength = data.length,
-        i = 0;
+const testApiKey = "Tpk_4059c0cbd9b94e0ab33019b5daf7d8ba";
+var stockToFind = "AAA";
+var chart = Highcharts.chart;
 
-    for (i; i < dataLength; i += 1) {
-        ohlc.push([
-            data[i][0], // the date
-            data[i][1], // open
-            data[i][2], // high
-            data[i][3], // low
-            data[i][4] // close
-        ]);
-
-        volume.push([
-            data[i][0], // the date
-            data[i][5] // the volume
-        ]);
-    }
-
-    Highcharts.stockChart('container', {
-        yAxis: [{
-            labels: {
-                align: 'left'
+$(document).ready(function () {
+    var options = {
+        chart: {
+            renderTo: 'container-fluid',
+            type: 'spline',
+            shadow: true
+        },
+        title: {
+            text: 'Stock Price'
+        },
+        subtitle: {
+            text: 'Measured in xxxx'
+        },
+        credits: {
+            text: 'Data from Pegelonline',
+            href: 'http://www.pegelonline.wsv.de/'
+        },
+        xAxis: {
+            type: 'datetime', //ensures that xAxis is treated as datetime values
+            dateTimeLabelFormats: {
+                second: '%H:%M:%S',
+                minute: '%H:%M:%S',
+                hour: '%H:%M:%S',
+                day: '%H:%M:%S',
+                week: '%H:%M:%S',
+                month: '%H:%M:%S',
+                year: '%H:%M:%S'
             },
-            height: '80%',
-            resize: {
-                enabled: true
-            }
-        }, {
-            labels: {
-                align: 'left'
-            },
-            top: '80%',
-            height: '20%',
-            offset: 0
-        }],
-        tooltip: {
-            shape: 'square',
-            headerShape: 'callout',
-            borderWidth: 0,
-            shadow: false,
-            positioner: function (width, height, point) {
-                var chart = this.chart,
-                    position;
-
-                if (point.isHeader) {
-                    position = {
-                        x: Math.max(
-                            // Left side limit
-                            chart.plotLeft,
-                            Math.min(
-                                point.plotX + chart.plotLeft - width / 2,
-                                // Right side limit
-                                chart.chartWidth - width - chart.marginRight
-                            )
-                        ),
-                        y: point.plotY
-                    };
-                } else {
-                    position = {
-                        x: point.series.chart.plotLeft,
-                        y: point.series.yAxis.top - chart.plotTop
-                    };
-                }
-
-                return position;
+            title: {
+                text: 'Time'
             }
         },
-        series: [{
-            type: 'ohlc',
-            id: 'aapl-ohlc',
-            name: 'AAPL Stock Price',
-            data: ohlc
-        }, {
-            type: 'column',
-            id: 'aapl-volume',
-            name: 'AAPL Volume',
-            data: volume,
-            yAxis: 1
-        }],
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 800
-                },
-                chartOptions: {
-                    rangeSelector: {
-                        inputEnabled: false
-                    }
-                }
-            }]
-        }
+        yAxis: {
+            title: {
+                text: 'Stock Price'
+            }
+        },
+        legend: {
+            enabled: true
+        },
+        plotOptions: {
+            series: {
+                turboThreshold: 0,
+            }
+        },
+        series: [{ }]
+    };
+
+    $.getJSON("Stock/GetText", null, function (data) {
+        chart_data = [];
+        $.each(data, function (i, obj) {
+            console.log(parseFloat(obj.minute));
+            chart_data.push({
+                x: parseFloat(obj.minute),
+                y: parseFloat(obj.open)
+            })
+        });
+        console.log(chart_data);
+        options.series[0].data = chart_data;
+        var chart = new Highcharts.Chart(options);
+    });
+});
+
+
+
+
+$(document).ready(function () {
+    var options = {
+        chart: {
+            renderTo: 'container',
+            type: 'spline',
+            shadow: true
+        },
+        title: {
+            text: 'Water level of the last xx days'
+        },
+        subtitle: {
+            text: 'Measured in xxxx'
+        },
+        credits: {
+            text: 'Data from Pegelonline',
+            href: 'http://www.pegelonline.wsv.de/'
+        },
+        xAxis: {
+            type: 'datetime',
+            minRange: 1 * 24 * 3600000 // one day
+        },
+        yAxis: {
+            title: {
+                text: 'Waterlevel'
+            }
+        },
+        legend: {
+            enabled: true
+        },
+        series: [{}]
+    };
+
+    $.getJSON('https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/BONN/W/measurements.json?start=P1D', function (data) {
+        chart_data = [];
+        $.each(data, function (i, obj) {
+            chart_data.push([Date.parse(obj.timestamp), obj.value]);
+        });
+        options.series[0].data = chart_data;
+        var chart = new Highcharts.Chart(options);
     });
 });

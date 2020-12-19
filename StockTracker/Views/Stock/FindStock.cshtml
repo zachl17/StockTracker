@@ -16,15 +16,15 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Symbol)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Exchange)
-            </th>
-            <th>
+            </th>*@
+            @*<th>
                 @Html.DisplayNameFor(model => model.Name)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -32,15 +32,15 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Symbol)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Exchange)
-                </td>
-                <td>
+                </td>*@
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Name)
-                </td>
+                </td>*@
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                     @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
