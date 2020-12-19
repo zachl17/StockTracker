@@ -25,6 +25,7 @@ $(document).ready(function () {
             href: 'http://www.pegelonline.wsv.de/'
         },
         xAxis: {
+            tickInterval: 1,
             type: 'datetime', //ensures that xAxis is treated as datetime values
             dateTimeLabelFormats: {
                 second: '%H:%M:%S',
@@ -59,8 +60,9 @@ $(document).ready(function () {
         chart_data = [];
         $.each(data, function (i, obj) {
             console.log(parseFloat(obj.minute));
+            var milliSeconds = Number(obj.minute.split(':')[0]) * 60 * 1000 + Number(obj.minute.split(':')[1]) * 1000;
             chart_data.push({
-                x: parseFloat(obj.minute),
+                x: parseFloat(milliSeconds),
                 y: parseFloat(obj.open)
             })
         });
