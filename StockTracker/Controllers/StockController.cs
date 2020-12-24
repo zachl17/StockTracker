@@ -23,24 +23,14 @@ namespace StockTracker.Controllers
             Console.WriteLine(Json(testApiUrl));
             return Json(testApiUrl);
         }
-        public IActionResult AllStocks()
+        [HttpPost]
+        public JsonResult FindStock(string stockSymbol)
         {
-            var testApiUrl = $"https://sandbox.iexapis.com/stable/ref-data/symbols?token={testApiKey}".GetStringFromUrl().FromJson<List<StockDataModel>>().ToList();
-            return View(testApiUrl);
-        }
 
-        //public IActionResult FindStock(string stockSymbol)
-        //{
-        //    string stockToFind = stockSymbol;
-        //    var testApiUrl = $"https://sandbox.iexapis.com/stable/stock/{stockToFind}/company?token={testApiKey}".GetStringFromUrl().FromJson<List<StockDataModel>>().ToList();
-        //    return View(testApiUrl);
-        //}
+            string stockToFind = stockSymbol;
+            var testApiUrl = $"https://sandbox.iexapis.com/stable/stock/{stockToFind}/intraday-prices?token={testApiKey}".GetStringFromUrl().FromJson<List<StockDataModel>>().ToList();
+            return Json(testApiUrl);
 
-        public IActionResult FindStock()
-        {
-            //string stockToFind = stockSymbol;
-            var testApiUrl = $"https://sandbox.iexapis.com/stable/stock/AAA/intraday-prices?token={testApiKey}".GetStringFromUrl().FromJson<List<StockDataModel>>().ToList(); 
-            return Json(new { data = testApiUrl });
         }
     }
 }

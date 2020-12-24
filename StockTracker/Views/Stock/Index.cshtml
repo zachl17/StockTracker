@@ -5,16 +5,11 @@
 
 <h1>Index</h1>
 
-@*@using (Html.BeginForm("FindStock", "Stock"))
-    {
-        <p>
-            Search  : @Html.TextBox("stockSymbol")<br />
-            <input type="submit" value="Search" />
-        </p>
-    }*@
 
-@*<button class="btn btn-info" type="button" id="addressSearch"
-    onclick="location.href='@Url.Action("FindStock", "Stock")'"/>*@
+<input type="text" class="btn btn-info" id="stockSymbol" />
+<input id="stockSearchBtn" type="submit" class="btn btn-info" />
+
+
 
 <div id="container-fluid" class="container-fluid"></div>
 

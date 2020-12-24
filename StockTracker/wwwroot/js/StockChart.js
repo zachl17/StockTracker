@@ -83,7 +83,7 @@ $(document).ready(function () {
             shadow: true
         },
         title: {
-            text: 'Water level of the last xx days'
+            text: 'Stock Price'
         },
         subtitle: {
             text: 'Measured in xxxx'
@@ -93,26 +93,76 @@ $(document).ready(function () {
             href: 'http://www.pegelonline.wsv.de/'
         },
         xAxis: {
-            type: 'datetime',
-            minRange: 1 * 24 * 3600000 // one day
+            tickInterval: 1,
+            type: 'datetime', //ensures that xAxis is treated as datetime values
+            dateTimeLabelFormats: {
+                second: '%H:%M:%S',
+                minute: '%H:%M:%S',
+                hour: '%H:%M:%S',
+                day: '%H:%M:%S',
+                week: '%H:%M:%S',
+                month: '%H:%M:%S',
+                year: '%H:%M:%S'
+            },
+            title: {
+                text: 'Time'
+            }
         },
         yAxis: {
             title: {
-                text: 'Waterlevel'
+                text: 'Stock Price'
             }
         },
         legend: {
             enabled: true
         },
+        plotOptions: {
+            series: {
+                turboThreshold: 0,
+            }
+        },
         series: [{}]
     };
 
-    $.getJSON('https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/BONN/W/measurements.json?start=P1D', function (data) {
-        chart_data = [];
-        $.each(data, function (i, obj) {
-            chart_data.push([Date.parse(obj.timestamp), obj.value]);
+    $("#stockSearchBtn").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "Stock/FindStock",
+            dataType: "json",
+            success:
+                function (data) {
+                    chart_data = [];
+                    $.each(data, function (i, obj) {
+                        console.log(parseFloat(obj.minute));
+                        var milliSeconds = Number(obj.minute.split(':')[0]) * 60 * 1000 + Number(obj.minute.split(':')[1]) * 1000;
+                        chart_data.push({
+                            x: parseFloat(milliSeconds),
+                            y: parseFloat(obj.open)
+                        })
+                    });
+                    console.log(chart_data);
+                    options.series[0].data = chart_data;
+                    var chart = new Highcharts.Chart(options);
+                }
         });
-        options.series[0].data = chart_data;
-        var chart = new Highcharts.Chart(options);
     });
 });
+        
+        
+    //$.getJSON("FindStock", null, function (data) {
+    //    chart_data = [];
+    //    $.each(data, function (i, obj) {
+    //        console.log(parseFloat(obj.minute));
+    //        var milliSeconds = Number(obj.minute.split(':')[0]) * 60 * 1000 + Number(obj.minute.split(':')[1]) * 1000;
+    //        chart_data.push({
+    //            x: parseFloat(milliSeconds),
+    //            y: parseFloat(obj.open)
+    //        })
+    //    });
+    //console.log(chart_data);
+    //options.series[0].data = chart_data;
+    //var chart = new Highcharts.Chart(options);
+
+
+//});
+
