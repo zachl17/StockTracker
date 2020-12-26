@@ -1,11 +1,17 @@
-﻿@model IEnumerable<StockTracker.Models.StockDataModel>
-
+﻿<head>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+</head>
 @{
     ViewData["Title"] = "FindStock";
 }
 
 <h1>FindStock</h1>
-
 
 <div id="container" class="container"></div>
 

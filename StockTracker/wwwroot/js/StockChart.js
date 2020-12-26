@@ -2,9 +2,10 @@
 /**
 * Request data from the server, add it to the graph and set a timeout to request again
 */
-
+var root = 'https://sandbox.iexapis.com';
 const testApiKey = "Tpk_4059c0cbd9b94e0ab33019b5daf7d8ba";
 var stockToFind = "AAA";
+
 var chart = Highcharts.chart;
 
 $(document).ready(function () {
@@ -124,32 +125,40 @@ $(document).ready(function () {
         series: [{}]
     };
 
-    $("#stockSearchBtn").click(function () {
+    $('#stockSearchBtn').on('click', function () {
         $.ajax({
-            type: "POST",
-            url: "Stock/FindStock",
-            dataType: "json",
-            success:
-                function (data) {
-                    chart_data = [];
-                    $.each(data, function (i, obj) {
-                        console.log(parseFloat(obj.minute));
-                        var milliSeconds = Number(obj.minute.split(':')[0]) * 60 * 1000 + Number(obj.minute.split(':')[1]) * 1000;
-                        chart_data.push({
-                            x: parseFloat(milliSeconds),
-                            y: parseFloat(obj.open)
-                        })
-                    });
-                    console.log(chart_data);
-                    options.series[0].data = chart_data;
-                    var chart = new Highcharts.Chart(options);
-                }
+            type: 'GET',
+            url: root + '/stable/stock/fb/intraday-prices?token=' + testApiKey,
+            contentType: "application/json; charset=utf-8",
+            dataType: "jsonp",
+            success: function (data) {
+                var ParsedObject = JSON.stringify(data);
+                alert(ParsedObject);
+
+                chart_data = [];
+                $.each(JSON.parse(ParsedObject), function (i, obj) {
+                    console.log(parseFloat(obj.minute));
+                    var milliSeconds = Number(obj.minute.split(':')[0]) * 60 * 1000 + Number(obj.minute.split(':')[1]) * 1000;
+                    chart_data.push({
+                        x: parseFloat(milliSeconds),
+                        y: parseFloat(obj.open)
+                    })
+                });
+                console.log(chart_data);
+                options.series[0].data = chart_data;
+                var chart = new Highcharts.Chart(options);
+
+
+            },
+            error: function (ex) {
+                alert("error");
+            }
+
         });
+
     });
-});
-        
-        
-    //$.getJSON("FindStock", null, function (data) {
+
+    //$.getJSON("Stock/FindStock", function (data) {
     //    chart_data = [];
     //    $.each(data, function (i, obj) {
     //        console.log(parseFloat(obj.minute));
@@ -159,10 +168,10 @@ $(document).ready(function () {
     //            y: parseFloat(obj.open)
     //        })
     //    });
-    //console.log(chart_data);
-    //options.series[0].data = chart_data;
-    //var chart = new Highcharts.Chart(options);
-
-
-//});
+    //    console.log(chart_data);
+    //    options.series[0].data = chart_data;
+    //    var chart = new Highcharts.Chart(options);
+    //});
+});
+        
 
