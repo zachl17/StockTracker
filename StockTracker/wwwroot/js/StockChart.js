@@ -126,9 +126,11 @@ $(document).ready(function () {
     };
 
     $('#stockSearchBtn').on('click', function () {
+        var stockToFind = $('#stockSymbol').val();
+        console.log(stockToFind);
         $.ajax({
             type: 'GET',
-            url: root + '/stable/stock/fb/intraday-prices?token=' + testApiKey,
+            url: root + `/stable/stock/${stockToFind}/intraday-prices?token=` + testApiKey,
             contentType: "application/json; charset=utf-8",
             dataType: "jsonp",
             success: function (data) {
