@@ -17,11 +17,9 @@ namespace StockTracker.Controllers
         {
             return View();
         }
-        public JsonResult GetText()
+        public PartialViewResult ChartView()
         {
-            var testApiUrl = $"https://sandbox.iexapis.com/stable/stock/FB/intraday-prices?token={testApiKey}".GetStringFromUrl().FromJson<List<StockDataModel>>().ToList();
-            Console.WriteLine(Json(testApiUrl));
-            return Json(testApiUrl);
+            return PartialView("_ChartPartial");
         }
     }
 }

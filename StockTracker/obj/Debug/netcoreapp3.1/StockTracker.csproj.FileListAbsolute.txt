@@ -165,3 +165,4 @@ C:\Users\zach\Documents\ooPrograms\StockTracker\StockTracker\obj\Debug\netcoreap
 C:\Users\zach\Documents\ooPrograms\StockTracker\StockTracker\obj\Debug\netcoreapp3.1\Razor\Views\Stock\GetStock.cshtml.g.cs
 C:\Users\zach\Documents\ooPrograms\StockTracker\StockTracker\obj\Debug\netcoreapp3.1\Razor\Views\Shared\StockGraph.cshtml.g.cs
 C:\Users\zach\Documents\ooPrograms\StockTracker\StockTracker\obj\Debug\netcoreapp3.1\Razor\Views\Stock\FindStock.cshtml.g.cs
+C:\Users\zach\Documents\ooPrograms\StockTracker\StockTracker\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ChartPartial.cshtml.g.cs
