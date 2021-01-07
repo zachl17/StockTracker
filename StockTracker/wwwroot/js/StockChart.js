@@ -26,16 +26,12 @@ $(document).ready(function () {
             href: 'http://www.pegelonline.wsv.de/'
         },
         xAxis: {
-            tickInterval: 1,
+            tickInterval: 3600 * 1000,
+            minTickInterval: 3600 * 1000,
             type: 'datetime', //ensures that xAxis is treated as datetime values
             dateTimeLabelFormats: {
-                second: '%H:%M:%S',
-                minute: '%H:%M:%S',
-                hour: '%H:%M:%S',
-                day: '%H:%M:%S',
-                week: '%H:%M:%S',
-                month: '%H:%M:%S',
-                year: '%H:%M:%S'
+                hour: '%I %p',
+                minute: '%I:%M %p'
             },
             title: {
                 text: 'Time'
