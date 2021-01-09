@@ -26,12 +26,17 @@ $(document).ready(function () {
             href: 'http://www.pegelonline.wsv.de/'
         },
         xAxis: {
-            tickInterval: 3600 * 1000,
-            minTickInterval: 3600 * 1000,
+            //tickInterval: 3600 * 1000,
+            //minTickInterval: 3600 * 1000,
             type: 'datetime', //ensures that xAxis is treated as datetime values
             dateTimeLabelFormats: {
-                hour: '%I %p',
-                minute: '%I:%M %p'
+                second: '%H:%M',
+                minute: '%H:%M',
+                hour: '%H:%M',
+                day: '%H:%M',
+                week: '%H:%M',
+                month: '%H:%M',
+                year: '%H:%M'
             },
             title: {
                 text: 'Time'
@@ -70,7 +75,8 @@ $(document).ready(function () {
                 chart_data = [];
                 $.each(JSON.parse(ParsedObject), function (i, obj) {
                     console.log(parseFloat(obj.minute));
-                    var milliSeconds = Number(obj.minute.split(':')[0]) * 60 * 1000 + Number(obj.minute.split(':')[1]) * 1000;
+                    var milliSeconds = Number(obj.minute.split(':')[0]) * 1000 * 60 * 60 + Number(obj.minute.split(':')[1]) * 1000 * 60;
+                    console.log(milliSeconds);
                     chart_data.push({
                         x: parseFloat(milliSeconds),
                         y: parseFloat(obj.open)
