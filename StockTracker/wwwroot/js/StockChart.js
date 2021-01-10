@@ -8,55 +8,55 @@ var stockToFind = "AAA";
 
 var chart = Highcharts.chart;
 
-$(document).ready(function () {
-    var options = {
-        chart: {
-            renderTo: 'container',
-            type: 'spline',
-            shadow: true
-        },
-        title: {
-            text: 'Stock Price'
-        },
-        subtitle: {
-            text: 'Measured in xxxx'
-        },
-        credits: {
-            text: 'Data from Pegelonline',
-            href: 'http://www.pegelonline.wsv.de/'
-        },
-        xAxis: {
-            //tickInterval: 3600 * 1000,
-            //minTickInterval: 3600 * 1000,
-            type: 'datetime', //ensures that xAxis is treated as datetime values
-            dateTimeLabelFormats: {
-                second: '%H:%M',
-                minute: '%H:%M',
-                hour: '%H:%M',
-                day: '%H:%M',
-                week: '%H:%M',
-                month: '%H:%M',
-                year: '%H:%M'
-            },
-            title: {
-                text: 'Time'
-            }
-        },
-        yAxis: {
-            title: {
-                text: 'Stock Price'
-            }
-        },
-        legend: {
-            enabled: true
-        },
-        plotOptions: {
-            series: {
-                turboThreshold: 0,
-            }
-        },
-        series: [{}]
-    };
+//$(document).ready(function () {
+//    var options = {
+//        chart: {
+//            renderTo: 'intraDayStockChart',
+//            type: 'spline',
+//            shadow: true
+//        },
+//        title: {
+//            text: 'Stock Price'
+//        },
+//        subtitle: {
+//            text: 'Measured in xxxx'
+//        },
+//        credits: {
+//            text: 'Data from Pegelonline',
+//            href: 'http://www.pegelonline.wsv.de/'
+//        },
+//        xAxis: {
+//            //tickInterval: 3600 * 1000,
+//            //minTickInterval: 3600 * 1000,
+//            type: 'datetime', //ensures that xAxis is treated as datetime values
+//            dateTimeLabelFormats: {
+//                second: '%H:%M',
+//                minute: '%H:%M',
+//                hour: '%H:%M',
+//                day: '%H:%M',
+//                week: '%H:%M',
+//                month: '%H:%M',
+//                year: '%H:%M'
+//            },
+//            title: {
+//                text: 'Time'
+//            }
+//        },
+//        yAxis: {
+//            title: {
+//                text: 'Stock Price'
+//            }
+//        },
+//        legend: {
+//            enabled: true
+//        },
+//        plotOptions: {
+//            series: {
+//                turboThreshold: 0,
+//            }
+//        },
+//        series: [{}]
+//    };
 
     $('#stockSearchBtn').on('click', function () {
         var stockToFind = $('#stockSymbol').val();
@@ -67,8 +67,57 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: "jsonp",
             success: function (data) {
-                $("#chartPartialView").load('@Url.Content("/Stock/ChartView")');
+                $("#chart").load('/Stock/ChartView');
 
+                var options = {
+                    chart: {
+                        renderTo: 'dayStockChart',
+                        type: 'spline',
+                        shadow: true
+                    },
+                    title: {
+                        text: 'Stock Price'
+                    },
+                    subtitle: {
+                        text: 'Measured in xxxx'
+                    },
+                    credits: {
+                        text: 'Data from Pegelonline',
+                        href: 'http://www.pegelonline.wsv.de/'
+                    },
+                    xAxis: {
+                        //tickInterval: 3600 * 1000,
+                        //minTickInterval: 3600 * 1000,
+                        type: 'datetime', //ensures that xAxis is treated as datetime values
+                        dateTimeLabelFormats: {
+                            second: '%H:%M',
+                            minute: '%H:%M',
+                            hour: '%H:%M',
+                            day: '%H:%M',
+                            week: '%H:%M',
+                            month: '%H:%M',
+                            year: '%H:%M'
+                        },
+                        title: {
+                            text: 'Time'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Stock Price'
+                        }
+                    },
+                    legend: {
+                        enabled: true
+                    },
+                    plotOptions: {
+                        series: {
+                            turboThreshold: 0,
+                        }
+                    },
+                    series: [{}]
+
+                }
                 var ParsedObject = JSON.stringify(data);
                 alert(ParsedObject);
 
@@ -95,5 +144,5 @@ $(document).ready(function () {
         });
 
     });
-});
+//});
 
