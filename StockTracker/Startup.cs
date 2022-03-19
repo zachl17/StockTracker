@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StockTracker.Areas.Identity;
 using StockTracker.Data;
+using Syncfusion.Blazor;
 
 namespace StockTracker
 {
@@ -27,8 +28,6 @@ namespace StockTracker
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -38,6 +37,7 @@ namespace StockTracker
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddSyncfusionBlazor(options => { options.IgnoreScriptIsolation = true; });
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddHttpClient();
         }
@@ -45,6 +45,8 @@ namespace StockTracker
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTk4MDMwQDMxMzkyZTM0MmUzMEsreS9OdFJPMWN2NUFyTlc3NUlickVoSHp0R0JMY0E4Nm9aTlZMYUloN1k9");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -1,20 +1,63 @@
-﻿<nav class="navbar navbar-dark bg-dark">
+﻿@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.DropDowns
+
+@inject IHttpClientFactory _clientFactory
+
+<nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand">Navbar</a>
+        <a class="navbar-brand">Stock Tracker</a>
         <LoginDisplay />
-        <form class="d-flex input-group w-auto">
-            <input type="search"
-                   class="form-control rounded"
-                   placeholder="Search"
-                   aria-label="Search"
-                   aria-describedby="search-addon" />
-            <span class="input-group-text border-0" id="search-addon">
-                <i class="fas fa-search"></i>
-            </span>
-        </form>
+        <EditForm Model="@model" OnValidSubmit="@OnValidSubmit" OnInvalidSubmit="@OnInvalidSubmit">
+            <DataAnnotationsValidator />
+            <div>
+                <SfAutoComplete TValue="string" TItem="StockModel" @bind-Value="@model.Symbol" Placeholder="Search..." DataSource="@stockNews" AllowCustom="false">
+                    <AutoCompleteFieldSettings Value="Symbol" />
+                </SfAutoComplete>
+                <ValidationMessage For="()=>model.Symbol" />
+            </div>
+            <div class="sfButton">
+                <SfButton type="submit" IsPrimary="true">Submit</SfButton>
+            </div>
+        </EditForm>
     </div>
 </nav>
 
 @code {
+    private StockModel model = new StockModel();
+    List<StockModel> stockNews;
+    string errorString;
+     private string Message = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+            "https://sandbox.iexapis.com/stable/ref-data/symbols/?token=Tpk_4059c0cbd9b94e0ab33019b5daf7d8ba");
+
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            stockNews = await response.Content.ReadFromJsonAsync<List<StockModel>>();
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"Error: {response.ReasonPhrase}";
+        }
+    }
+    async void OnValidSubmit()
+    {
+        Message = "Form Submitted Successfully!";
+        await Task.Delay(2000);
+        Message = string.Empty;
+        model.Symbol = null;
+        StateHasChanged();
+    }
+    private void OnInvalidSubmit()
+    {
+        Message = string.Empty;
+    }
 
 }
