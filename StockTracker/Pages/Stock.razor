@@ -1,0 +1,45 @@
+﻿@page "/stock/{Symbol}"
+
+@using Newtonsoft.Json
+
+@inject IHttpClientFactory _clientFactory
+@inject NavigationManager NavManager
+
+<h3>@Symbol</h3>
+
+@code {
+    [Parameter]
+    public string Symbol { get; set; }
+
+    private Theme Theme { get; set; }
+    public string Width { get; set; } = "60%";
+    private StockModel[] ChartPoints { get; set; } = new StockModel[] { };
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+            $"https://sandbox.iexapis.com/stable/stock/{Symbol}/chart/max/?token=Tpk_4059c0cbd9b94e0ab33019b5daf7d8ba");
+
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var contentStream = await response.Content.ReadAsStreamAsync();
+
+            using var streamReader = new StreamReader(contentStream);
+            using var jsonReader = new JsonTextReader(streamReader);
+
+            JsonSerializer serializer = new JsonSerializer();
+            ChartPoints = serializer.Deserialize<StockModel[]>(jsonReader);
+
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"Error: {response.ReasonPhrase}";
+        }
+    }
+}

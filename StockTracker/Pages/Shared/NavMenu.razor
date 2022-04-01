@@ -2,6 +2,7 @@
 @using Syncfusion.Blazor.DropDowns
 
 @inject IHttpClientFactory _clientFactory
+@inject NavigationManager NavManager
 
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
@@ -46,12 +47,13 @@
             errorString = $"Error: {response.ReasonPhrase}";
         }
     }
-    async void OnValidSubmit()
+    void OnValidSubmit()
     {
-        await Task.Delay(2000);
-        model.Symbol = null;
-        StateHasChanged();
-    }
+        NavManager.NavigateTo($"/stock/{model.Symbol}");
+        //await Task.Delay(2000);
+        //model.Symbol = null;
+        //StateHasChanged();
+        }
     private void OnInvalidSubmit()
     {
 
