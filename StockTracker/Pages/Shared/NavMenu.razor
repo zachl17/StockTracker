@@ -10,7 +10,7 @@
         <EditForm Model="@model" OnValidSubmit="@OnValidSubmit" OnInvalidSubmit="@OnInvalidSubmit">
             <DataAnnotationsValidator />
             <div>
-                <SfAutoComplete TValue="string" TItem="StockModel" @bind-Value="@model.Symbol" Placeholder="Search..." DataSource="@stockNews" AllowCustom="false">
+                <SfAutoComplete TValue="string" TItem="StockModel" @bind-Value="@model.Symbol" Placeholder="Search..." DataSource="@stockList" AllowCustom="false">
                     <AutoCompleteFieldSettings Value="Symbol" />
                 </SfAutoComplete>
                 <ValidationMessage For="()=>model.Symbol" />
@@ -24,9 +24,8 @@
 
 @code {
     private StockModel model = new StockModel();
-    List<StockModel> stockNews;
+    List<StockModel> stockList;
     string errorString;
-     private string Message = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,7 +38,7 @@
 
         if (response.IsSuccessStatusCode)
         {
-            stockNews = await response.Content.ReadFromJsonAsync<List<StockModel>>();
+            stockList = await response.Content.ReadFromJsonAsync<List<StockModel>>();
             errorString = null;
         }
         else
@@ -49,15 +48,12 @@
     }
     async void OnValidSubmit()
     {
-        Message = "Form Submitted Successfully!";
         await Task.Delay(2000);
-        Message = string.Empty;
         model.Symbol = null;
         StateHasChanged();
     }
     private void OnInvalidSubmit()
     {
-        Message = string.Empty;
-    }
 
+    }
 }

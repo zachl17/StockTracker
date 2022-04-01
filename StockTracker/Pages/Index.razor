@@ -8,7 +8,24 @@
 }
 else
 {
-
+    <h3>News</h3>
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th>Headline</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stock in stockNews)
+            {
+                <tr>
+                    <td>@stock.Headline</td>
+                    <td>@stock.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 @code{
@@ -18,6 +35,21 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        
+        var request = new HttpRequestMessage(HttpMethod.Get,
+            "https://sandbox.iexapis.com/stable/time-series/news/?token=Tpk_4059c0cbd9b94e0ab33019b5daf7d8ba");
+
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            stockNews = await response.Content.ReadFromJsonAsync<List<StockModel>>();
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"Error: {response.ReasonPhrase}";
+        }
     }
 }
