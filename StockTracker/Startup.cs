@@ -37,6 +37,7 @@ namespace StockTracker
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddSingleton<StockService>();
             services.AddSyncfusionBlazor(options => { options.IgnoreScriptIsolation = true; });
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddHttpClient();

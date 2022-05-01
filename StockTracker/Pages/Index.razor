@@ -1,8 +1,11 @@
 ﻿@page "/"
 
-@inject IHttpClientFactory _clientFactory
+@using StockTracker.Data
 
-@*@if (stockNews is null)
+@inject IHttpClientFactory _clientFactory
+@inject StockService _stockService
+
+@if (stockNews is null)
 {
     <div class="h4">Loading...</div>
 }
@@ -26,7 +29,7 @@ else
             }
         </tbody>
     </table>
-}*@
+}
 
 @code{
 
@@ -35,21 +38,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var request = new HttpRequestMessage(HttpMethod.Get,
-            "https://sandbox.iexapis.com/stable/time-series/news/?token=Tpk_4059c0cbd9b94e0ab33019b5daf7d8ba");
-
-        var client = _clientFactory.CreateClient();
-
-        HttpResponseMessage response = await client.SendAsync(request);
-
-        if (response.IsSuccessStatusCode)
-        {
-            stockNews = await response.Content.ReadFromJsonAsync<List<StockModel>>();
-            errorString = null;
-        }
-        else
-        {
-            errorString = $"Error: {response.ReasonPhrase}";
-        }
+        stockNews = await _stockService.GetTodaysNews();
     }
 }

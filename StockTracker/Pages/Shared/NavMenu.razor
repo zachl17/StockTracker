@@ -1,8 +1,10 @@
 ﻿@using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.DropDowns
+@using StockTracker.Data
 
 @inject IHttpClientFactory _clientFactory
 @inject NavigationManager NavManager
+@inject StockService _stockService
 
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
@@ -30,22 +32,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var request = new HttpRequestMessage(HttpMethod.Get,
-            "https://sandbox.iexapis.com/stable/ref-data/symbols/?token=Tpk_4059c0cbd9b94e0ab33019b5daf7d8ba");
-
-        var client = _clientFactory.CreateClient();
-
-        HttpResponseMessage response = await client.SendAsync(request);
-
-        if (response.IsSuccessStatusCode)
-        {
-            stockList = await response.Content.ReadFromJsonAsync<List<StockModel>>();
-            errorString = null;
-        }
-        else
-        {
-            errorString = $"Error: {response.ReasonPhrase}";
-        }
+        stockList = await _stockService.GetStockSymbols();
     }
     void OnValidSubmit()
     {
@@ -53,7 +40,7 @@
         //await Task.Delay(2000);
         //model.Symbol = null;
         //StateHasChanged();
-        }
+    }
     private void OnInvalidSubmit()
     {
 
