@@ -1,6 +1,8 @@
-﻿using StockTracker.Models;
+﻿using Newtonsoft.Json;
+using StockTracker.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -19,9 +21,8 @@ namespace StockTracker.Data
 
         private List<StockModel> todaysNews = new List<StockModel>();
         private List<StockModel> stockSymbolList = new List<StockModel>();
-
-
-        public async Task<List<StockModel>> GetStockSymbols() 
+        private StockModel[] stockChartPlotPoints = new StockModel[] { };
+        public async Task<List<StockModel>> GetStockSymbols()
         {
             var request = new HttpRequestMessage(HttpMethod.Get,
             $@"{baseAddress}ref-data/symbols/{token}");
@@ -49,6 +50,26 @@ namespace StockTracker.Data
                 todaysNews = await response.Content.ReadFromJsonAsync<List<StockModel>>();
             }
             return todaysNews;
+        }
+        public async Task<StockModel[]> GetSymbolChart(string symbol)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            $@"{baseAddress}stock/{symbol}/chart/max/{token}");
+            var client = _clientFactory.CreateClient();
+
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var contentStream = await response.Content.ReadAsStreamAsync();
+
+                using var streamReader = new StreamReader(contentStream);
+                using var jsonReader = new JsonTextReader(streamReader);
+
+                JsonSerializer serializer = new JsonSerializer();
+                stockChartPlotPoints = serializer.Deserialize<StockModel[]>(jsonReader);
+            }
+            return stockChartPlotPoints;
         }
     }
 }
