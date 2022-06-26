@@ -2,24 +2,61 @@
 
 @using Newtonsoft.Json
 @using StockTracker.Data
+@using Syncfusion.Blazor.Charts
 
 @inject IHttpClientFactory _clientFactory
 @inject NavigationManager NavManager
 @inject StockService _stockService
 
 <h3>@Symbol</h3>
+@if (ChartPoints == null)
+{
+    <div class="stockchartloader"></div>
+}
+else
+{
+    <div class="@loadClass"></div>
+    <div class="@loadDiv">
+        <SfStockChart Title="AAPL Stock Price">
+            <StockChartEvents OnLoaded="@ChartLoaded"></StockChartEvents>
+            <StockChartPrimaryXAxis>
+                <StockChartAxisMajorGridLines Width="0"></StockChartAxisMajorGridLines>
+                <StockChartAxisCrosshairTooltip Enable="true"></StockChartAxisCrosshairTooltip>
+            </StockChartPrimaryXAxis>
+            <StockChartPrimaryYAxis>
+                <StockChartAxisLineStyle Width="0"></StockChartAxisLineStyle>
+                <StockChartAxisMajorTickLines Width="0"></StockChartAxisMajorTickLines>
+            </StockChartPrimaryYAxis>
+            <StockChartTooltipSettings Enable="true"></StockChartTooltipSettings>
+            <StockChartCrosshairSettings Enable="true"></StockChartCrosshairSettings>
+            <StockChartSeriesCollection>
+                <StockChartSeries DataSource="@ChartPoints" Type="ChartSeriesType.Candle"></StockChartSeries>
+            </StockChartSeriesCollection>
+            <StockChartChartArea>
+                <StockChartChartAreaBorder Width="0"></StockChartChartAreaBorder>
+            </StockChartChartArea>
+        </SfStockChart>
+    </div>
+}
 
 @code {
     [Parameter]
     public string Symbol { get; set; }
-
-    private Theme Theme { get; set; }
-    public string Width { get; set; } = "60%";
     private StockModel[] ChartPoints { get; set; } = new StockModel[] { };
     string errorString;
+
+    string loadClass = "stockchartloader";
+    string loadDiv = "stockchartdiv";
 
     protected override async Task OnInitializedAsync()
     {
         ChartPoints = await _stockService.GetSymbolChart(Symbol);
+
+    }
+    void ChartLoaded(StockChartEventArgs args)
+    {
+        loadClass = "";
+        loadDiv = "";
+        StateHasChanged();
     }
 }
